@@ -1,0 +1,36 @@
+Before starting anything, create a new repository at github.com/depillis/
+
+Then locally in your iterm, do (or copy and paste the path from the webpage under the "Clone or download" green dropdown button):
+  git clone https://github.com/depillis/NewRepoName.git
+
+Locally, a directory will be created called NewRepoName/
+After this, your NewRepoName is now known as "origin". "origin" is an alias for the online repository name. Origin is the remote repo. Master is my local branch (and the remote branch). 
+
+Then, inside NewRepoName, you can create files and add them with git add (see below).
+
+(Sometimes locally, do git pull)
+
+---------
+
+After changing files, within this current directory, type
+  git commit -am "Some message here about the update"
+
+At this point, the local files are now "committed" to a new version.
+
+Now to get this into the git cloud, type this:
+  git push -u origin master
+
+
+-------
+
+
+Note: Any new files you create, you have to add them explicitly
+Ex:
+  git add GitHubNotes.txt
+
+Note: You can check status by using
+  git status
+
+
+
+
