@@ -1,0 +1,312 @@
+\listfiles
+\documentclass[review]{elsarticle}
+
+\usepackage{lineno,hyperref}
+\modulolinenumbers[5]
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage[most]{tcolorbox}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage{multirow}
+\usepackage[english]{babel}
+\usepackage[linesnumbered, ruled,vlined]{algorithm2e}
+\usepackage{appendix}
+\usepackage{float}
+
+%An's package 
+
+\newcommand{\ds}{\displaystyle}
+
+
+\journal{Journal of \LaTeX\ Templates}
+
+%%%%%%%%%%%%%%%%%%%%%%%
+%% Elsevier bibliography styles
+%%%%%%%%%%%%%%%%%%%%%%%
+%% To change the style, put a % in front of the second line of the current style and
+%% remove the % from the second line of the style you would like to use.
+%%%%%%%%%%%%%%%%%%%%%%%
+
+% Numbered
+% \bibliographystyle{model1-num-names}
+
+%% Numbered without titles
+% \bibliographystyle{model1a-num-names}
+
+%% Harvard
+% \bibliographystyle{model2-names}\biboptions{authoryear}
+
+%% Vancouver numbered
+% \usepackage{numcompress}\bibliographystyle{model3-num-names}
+
+%% Vancouver name/year
+% \usepackage{numcompress}\bibliographystyle{model4-names}\biboptions{authoryear}
+
+%% APA style
+% \bibliographystyle{model5-names}\biboptions{authoryear}
+
+%% AMA style
+% \usepackage{numcompress}\bibliographystyle{model6-num-names}
+
+%% `Elsevier LaTeX' style, distributed in TeX Live 2019
+\bibliographystyle{elsarticle-num}
+% \usepackage{numcompress}\bibliographystyle{elsarticle-num-names}
+% \bibliographystyle{elsarticle-harv}\biboptions{authoryear}
+%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\begin{frontmatter}
+
+\title{A User’s Exploration of Data Assimilation Techniques for Parameter Fitting on a Simple ODE Model }
+\tnotetext[mytitlenote]{Fully documented templates are available in the elsarticle package on \href{http://www.ctan.org/tex-archive/macros/latex/contrib/elsarticle}{CTAN}.}
+
+%% Group authors per affiliation:
+\cortext[mycorrespondingauthor]{Corresponding author}
+\ead{email.edu}
+
+
+\author[cgu]{An Do}
+\author[harveymudd]{Lisette de Pillis\corref{mycorrespondingauthor}}
+\author[scripps]{Christina J. Edholm}
+\author[pomona]{Blerta Shtylla}
+\author[scripps]{Christina Catlett}
+\author[johnshopkins]{Daniel Shenker}
+\author[harveymudd]{Rachel Wander}
+\author[umass]{Maya Watanabe}
+
+
+\address[cgu]{Claremont Graduate University, Claremont, CA, USA}
+\address[harveymudd]{Harvey Mudd College, Claremont, CA, USA}
+\address[scripps]{Scripps College, Claremont, CA, USA}
+\address[pomona]{Pomona College, Claremont, CA, USA}
+\address[johnshopkins]{Johns Hopkins University, Baltimore, MD, USA}
+\address[umass]{University of Massachusetts Amherst, Amherst, MA, USA}
+
+
+
+
+\begin{abstract}
+We are trying to make this data assimilation approach accessible, which is why we include code. You know we want people working at all levels to be able to take advantage of these techniques. For example, Kalman filters, historically confined to the realm of some engineers, not very often introduced to mathematics students (doing modeling). There have been recent forays into using Data Assimilation techniques (Kalman filters which are part of that) in biological models (Albers)
+But because there are challenges with the stability of the numerics (among other things) these approaches have not become widespread. We have found certain challenges. Certain implementation challenges such as stability of the numerics and even clarity of explanation as to what these algorithms do. Covariance matrices have to be positive definite. But they lose this characteristic all the time. Many have tried different ways to adjust this problem. We want to mention the issues and share the practical experiences in implementing these techniques, what is working and what is not. 
+\end{abstract}
+
+\begin{keyword}
+\texttt{elsarticle.cls}\sep \LaTeX\sep Elsevier \sep template
+\MSC[2010] 00-01\sep  99-00
+\end{keyword}
+
+\end{frontmatter}
+
+\tableofcontents
+
+\linenumbers
+
+
+\subsection{Unscented Kalman Filter}\label{UKF}
+
+The Kalman filter (KF) was developed by Kalman in 1960 \cite{kalman1960new}. It is an iterative prediction-correction scheme that 
+uses a set of equations and a series of measurements observed over time, including their statistical noises and measurement errors to produce estimates of the objects of interest. A unique feature about the Kalman filter approaches is that it can estimate the value of unobservable variables (latent) given a series of data of the observable state variables \cite{GoveHollingerDual}.
+
+In the context of mechanistic modeling, latent states 
+are the unknown parameters while the observables are the state variables whose data has been measured or observed from experimental studies. The objective goal is to use the available data of state variables to estimate the model parameters that yield the best estimates of the model outputs \cite{albers2017personalized}. 
+
+
+The Kalman filter is normally used for linear systems. When system dynamics are nonlinear, the extended Kalman filter is normally executed. However, the extended kalman filter suffers from divergence issue \cite{fitzgerald1971divergence} because linearization does not always capture the correct dynamics of the underlying system \cite{maybeck1982stochastic}. As a result, several new filtering methods have recently been introduced on the basis of the Kalman filter such as dual unscented Kalman filters \cite{VanMereChapter,GoveHollingerDual}, joint unscented Kalman filters \cite{VanMereChapter,ChowFerrer}, ensemble Kalman filters \cite{evensen2003ensemble,evensen2003ensemble}. 
+
+The advantage of these ``derivativeless'' approaches is that rather than seeking to linearize the nonlinear dynamics of the system, they deterministically sample the joint density of the states in such a way that the mean and covariance are preserved. The full nonlinear system dynamics are then applied to these sample points in order to propagate the density through the prediction step of the filter. In this paper, we will use the joint unscented kalman filter along with other parameter estimation techniques to estimate unknown parameters in a mechanistic biological model. 
+
+
+The joint unscented algorithm is a two-step process: predict and update. In the prediction step, algorithm uses the system dynamics to update the previous measurement before any new data input becomes available. 
+Then, these estimates are updated once the new data becomes available. This two-step recursion is then applied at each successive time period, using only the present data and the previously states estimates and its uncertainty matrix without any additional past information is required.  
+
+
+
+{\it Implementation}
+
+Before outline the implementation steps of Joint UKF, we want to review some critical assumptions (illustrated in Equation \eqref{eqn:process}- \eqref{eqn:measure}) about the algorithm as these features play a critical role in the algorithm. 
+
+
+\begin{align}
+    &x_{k+1} = F(x_k) + q_{k+1} \label{eqn:process}\\
+    &y_{k+1} = H(x_{k+1}) + r_{k+1}  \label{eqn:measure}
+\end{align}
+
+
+\begin{itemize}
+\item The time prediction of the state variables and parameters $x_{k+1}$ at each time step driven by a nonlinear dynamical system $F$.
+\item There is some noise/uncertainty $q$ associated with the ODE model solver ({\it ``process noise''}). This known quantity is defaulted in our paper and discussed in the Supplementary information. 
+\item The actual estimated observables $y_{k+1}$ comprises of only the state variables of the model (excluding the model parameters). 
+\item Function $H$ in equation \eqref{eqn:process} represents the relationship between the projected states variables and the actual observables. For example, rather than a single or all state variables can be observed, only some algebraic combination of them can be observed \cite{SimonHaykinText}.
+\item $r$ represents the {\it ``measurement noise''} in obtaining the actual data.   
+\end{itemize}
+
+  
+  \textcolor{red}{Unscented Transformation. This section writing is very confusing. The general idea of sigma points are just some random samples around the previously estimated states/parameter vector. Details of this UT has been mentioned in greater details in \cite{albers2017personalized,GoveHollingerDual,ChowFerrer}. UT is not a bottleneck of this algorithm according to our experience .However, it is the vehicle for the covariance matrix and error covariance matrix to show up.}
+
+   
+    
+	\begin{algorithm}[H]
+	\SetAlgoLined
+	
+	\KwResult{Estimated states and model parameters over time}
+	Initialize states and model parameters in a vector $x_0$ and covariance matrix $P_0$\;
+
+	\For{every time data point}{
+	At time $t=k$\;
+	
+	Draw as subset of “sigma points” around $𝑥_{𝑘−1}$\;
+	Estimate the next time update (both states and parameters) via the dynamical system \;
+	Predict $\ds \hat{x_k}, \hat{P_k}$, the projected states/parameter at time $t=k$ and projected covariance matrix, which is the weighted average of all the transformed sigma points Update the prediction when new data becomes available \; 
+	Update the prediction when new data becomes available
+
+	}
+
+	
+	
+	\caption{Say something about Joint UKF algorithm}
+	\label{alg:JointUKF}
+	\end{algorithm}
+
+
+    \subsubsection{Initialization}
+    To create these initial guesses $x_0$ and $P_0$, some prior knowledge of the states and their plausible ranges is necessary. Assuming this information is available, one may initialize with:
+
+    \begin{align}
+    \hat{x}_0 = E[x_0],
+    P_0 = \text{identity matrix scaled by $10^{-4}$, why?}
+    \end{align}
+
+%========= stop here =========== %
+    \subsubsection{Projection Step}
+
+    Now, we proceed to do the projection portion of the algorithm. Having chosen a set of sigma points via equations \ref{eq:Weights_1}, \ref{eq:Weights_2}, and \ref{eq:Weights_3} , we now project them in time by applying the transition matrix to each point in the vector $\chi_{k-1}$:
+    \begin{equation}
+    \chi_{k|k-1} = F(\chi_{k-1}).
+    \end{equation}
+    It is important to note that here $\hat{x}_{k-1}$ plays the role of $\bar{v}$ in equations \ref{eq:UT_1}, \ref{eq:UT_2}, and \ref{eq:UT_3}.
+    Next we calculate a prior prediction of the state $\hat{x}_k^-$ with:
+    \begin{equation}
+    \hat{x}_k^- = \sum_{i = 0}^{2L} W_i^{(m)} \chi_{i, k|k-1}.
+    \end{equation}
+    Similarly we can calculate a prior covariance $P_k^-$ by using our weights as well as the process noise:
+    \begin{equation}
+    P_k^- = \sum_{i = 0}^{2L} W_i^{(c)} [\chi_{i, k|k-1} - \hat{x}_k^-][\chi_{i, k|k-1} - \hat{x}_k^-]^T + Q.
+    \end{equation}
+    We can see that the calculation of $\hat{x}_k^-$ and $P_k^-$ are both \emph{applications of the Unscented Transformation} as we created, transformed, and weighted sigma vectors. Next, we apply the UT transformation to understand our observables with:
+    \begin{equation}
+    Y_{k|k-1} = H[\chi_{k|k-1}].
+    \end{equation}
+    This allows us to know calculate a prior estimate of the observables $y_k^-$ by utilizing:
+    \begin{equation}
+    \hat{y}_k^- = \sum_{i=0}^{2L} W_i^{(m)} Y_{i,k|k-1}.
+    \end{equation}
+     Once again, we have made use of the \emph{UT transformation} here by passing our sigma vectors through $H$ this time, as opposed to $F$ as before.
+    \subsubsection{Update Step}
+    Having created prior estimates for both states and observables, we now proceed to the update step where the observed data is brought in \cite{VanMereChapter}. 
+    
+    We begin by calculating the covariance matrix $P_{\tilde{y}_k, \tilde{y}_k}$, which is the covariance matrix for the error between the projected and actual values of the observables. 
+    
+    Moreover, this calculation takes into account the measurement noise through $R$:
+    \begin{equation}
+    P_{\tilde{y}_k, \tilde{y}_k} = \sum_{i=0}^{2L} W_i^{(c)} [Y_{i,k|k-1} - \hat{y}_k^-][Y_{i,k|k-1} - \hat{y}_k^-]^T + R. 
+    \end{equation}
+    Next we need a covariance between our states and observables, which is calculated by:
+    \begin{equation}
+    P_{{x}_k,{y}_k} = \sum_{i=0}^{2L} W_i^{(c)} [\chi_{i,k|k-1} - \hat{x}_k^-][Y_{i,k|k-1} - \hat{y}_k^-]^T.
+    \end{equation}
+    At this point, we have sufficient information to calculate the \textbf{Kalman Gain}, a crucial term in the UKF algorithm. The Kalman Gain is used to weight the error between the predicted value and the observed value of $x_k$ in order to update the filter's prior predictions. A larger Kalman Gain will give more weight to the error, resulting in a larger correction and a smaller Kalman Gain will give less weight to the error, resulting in a smaller correction. The Kalman Gain is also used to adjust the covariance matrix $P_k$ and is calculated through \cite{VanMereChapter}:
+    \begin{equation}
+    K_k = P_{x_k, y_k} P_{\tilde{y}_k, \tilde{y}_k}^{-1}. 
+    \end{equation}
+    Calculation of the Kalman Gain allows us to calculate our posterior estimates of both the states, $\hat{x}_k$, and covariance, $P_k$ \cite{VanMereChapter}. For the states the following equation is used
+    \begin{equation}
+    \hat{x}_k = \hat{x}_k^- + K_k(y_k - \hat{y}_k^-). 
+    \end{equation}
+    And for the covariance we use:
+    \begin{equation} \label{eq:27ukf}
+    P_k = P_k^-  - K_k P_{\tilde{y}_k, \tilde{y}_k} K_k^T.
+    \end{equation}
+    We can see that both equations function by adjusting our prior prediction through use of the Kalman Gain.
+    
+    After having gone through the update step, the next data point would be brought in and we would return to the Projection Step once more.
+    \subsubsection{Summary}
+    A flow chart depicting one iteration of the entire UKF process is found in figure \ref{fig:UKF_Theory_FlowChart}. To summarize, our goal is to begin with a set of sigma points chosen in a deterministic fashion and arrive at the posterior estimates for the states and covariance. This is done in two main sections, the Projection Step, whose quantities are shaded in red, and the Update Step, displayed in blue.
+    
+    % \begin{figure} [H]
+    % \centering
+    % \includegraphics[scale = 0.6]{Figures/UKFFlowDiagram.jpg}
+    % \caption{A flow chart depicting one iteration of the UKF process. The sigma points are shaded in yellow, the intermediate steps in red, the Kalman gain in green, and the posterior estimates in blue.}
+    % \label{fig:UKF_Theory_FlowChart}
+    % \end{figure}
+
+\section{Implementation of the DA techniques on Lotka-Volterra}\label{Lotka-Volterra}
+
+
+
+\subsection{Pros \& Cons}
+Need the previous sections to be finalized first.
+
+
+\subsection{Covariance matrices for UKF}
+
+    \subsubsection{Stability and Divergence Issues}
+    When utilizing the UKF, it is important to consider the issue of positive definitiness of the covariance matrix $P_k$. If this matrix becomes non-positive definite, the filter can experience severe divergence issues due to invalid covariance matrices, which can occur as a result of the update made in equation \ref{eq:27ukf}. This then can lead the filter to diverge \cite{SimonHaykinText}. \\
+    
+    The solution to the issue lies in using the \textbf{Cholesky factorization} \cite{SimonHaykinText}.
+    \\
+    
+    At every iteration of the Kalman Filter, one must perform the following step:
+    \begin{equation}
+    P_k = {P_k}^{1/2} {P_k}^{T/2},
+    \end{equation}
+    where ${P_k}^{1/2}$ is the \textbf{Cholesky factor} and is in lower-triangular form, and ${P_k}^{T/2}$ is the Cholesky factor's transpose \cite{SimonHaykinText}. Here, $P_k$ is now the product of a square matrix and its transpose, which is \textbf{guaranteed to be positive definite}. In order to find the Cholesky factor, a function such as Matlab's \emph{chol} (https://www.mathworks.com/help/matlab/ref/chol.html) can be used. By using this approach, one will have a better chance of maintaining the stability of the Kalman Filter across iterations. \\
+
+\section{Numerical results for parameter and state estimation}\label{RESULT}
+
+\subsection{Lotka-Volterra model} \label{MODEL}
+
+The model was developed independently by Alfred J. Lotka and Vito Volterra in the 1920s to describe the interaction between hares (prey, denoted as $h$) and lynx (predator, denoted as $h$). The model consists of two ordinary differential equations \ref{eq:prey}-\ref{eq:predator} and contains 4 parameters presented in Table \ref{tab:parameters}. We are interested in employing the aforementioned parameter fitting techniques (PSO, DRAM, UKF) to estimate their values from real-life data. 
+
+\begin{align} 
+\frac{dh}{dt} = \alpha h - \beta hl  \label{eq:prey} \\
+\frac{dl}{dt} = -\gamma l + \delta hl \label{eq:predator}
+\end{align}
+
+\begin{table}[ht!]
+\centering
+\begin{tabular}{c | c }
+\hline 
+Parameter & Description \\
+\hline 
+$\alpha$ & growth rate of hares\\
+$\beta$ & death rate of hares due to being consumed by lynx\\
+$\gamma$ & death rate of lynx due to absence of hares\\
+$\delta$ & growth rate of lynx due to sufficient food source\\
+\hline
+\end{tabular}
+\caption{\scriptsize{Parameter notation and definition of the Lotka-Voterra model described in equation \eqref{eq:prey}-\eqref{eq:predator}}}
+\label{tab:parameters}
+\end{table}
+
+In equation \eqref{eq:prey}, the primary growth in the hare population is in proportion to its own population and their loss is due to predation by lynx. Equation \eqref{eq:predator} describes the change in lynx population. First, their growth depends on sufficient food (hares), which is similar to the death rate for the hare population, Additionally, their loss is presumed to be due to the absence of hares. 
+
+
+This model rests on several simplifying assumptions. First, hare population will grow exponentially in the absence of the predator population. Second, lynx population will starve in the absence of prey. Finally, there is no limit to the number of hares that can be consumed by any lynx.
+
+The model's solution has been shown to experience oscillating behavior, with the peak of the lynx's oscillation lagging behind that of the hare's \cite{Lotka,Volterra}.
+
+
+\subsection{Time-invariant parameters}
+\subsection{Time-varying parameters}
+\subsection{Large data-set}
+
+\section{Conclusions}
+\subsection{PSO \& DRAM for time-invariant parameters}
+\subsection{UKF for time-varying parameters}
+\subsection{Our contributions}
+
+\end{document}
