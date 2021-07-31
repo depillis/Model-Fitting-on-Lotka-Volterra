@@ -2,6 +2,10 @@
 % Date: 6/16/2021
 % Compare estimated parameters across all the methods 
 
+% Add reference links for both datasets 
+% https://gist.github.com/michaelosthege/27315631c1aedbe55f5affbccabef1ca
+
+
 clear ; 
 close all; 
 clc; 
@@ -82,7 +86,7 @@ figure(1)
     plot(time_vector, sol_DRAM(1,:), '-.', 'Linewidth', 1, 'Color', [0.00,0.45,0.74]);
     plot(time_vector, sol_PSO(1,:), '-.', 'Linewidth', 1, 'Color', [0.00,0.45,0.74]);
     
-    set(gca, 'XTick', 1:5:T ,'Xticklabel', 1900: 5: 1920,'fontsize', ftsz)
+    set(gca,'Xtick', time_vector,'Xticklabel',time_vector, 'fontsize', ftsz)
     ylabel('population');
     xlabel('year');
     legend('Raw data', 'UKF','DRAM','PSO');
@@ -91,13 +95,13 @@ figure(1)
 figure(2)
     ylim([0,200])
     plot(time_vector,x(2,:), '.','MarkerSize', 20); hold on; 
-    plot(time_vector,sol_UKF(1,:), '.-','LineWidth',2,'Color',[1.00,0.00,1.00],...
+    plot(time_vector,sol_UKF(2,:), '.-','LineWidth',2,'Color',[1.00,0.00,1.00],...
     'MarkerSize', 20); hold on;
     %plot(time_vector, sol_mahafy(2,:), '-.', 'Linewidth', 1, 'Color', [0.00,0.45,0.74]);
     plot(time_vector, sol_DRAM(2,:), '-.', 'Linewidth', 1, 'Color', [0.00,0.45,0.74]);
     plot(time_vector, sol_PSO(2,:), '-.', 'Linewidth', 1, 'Color', [0.00,0.45,0.74]);
     
-    set(gca, 'XTick', 1:5:T ,'Xticklabel', 1900: 5: 1920,'fontsize', ftsz)
+    set(gca,'Xtick', time_vector,'Xticklabel',time_vector, 'fontsize', ftsz)
     ylabel('population');
     xlabel('year');
     legend('Raw data','UKF', 'DRAM','PSO');
@@ -110,29 +114,35 @@ figure(2)
 % mahafy_error = x(1:2,:) - sol_mahafy; %use matrix subtraction to get error
 % mahafy_error_norm = vecnorm(mahafy_error); %take columnwise norm
 
-DRAM_error = x(1:2,:) - sol_DRAM; %use matrix subtraction to get error
-DRAM_error_norm = vecnorm(DRAM_error);
+DRAM_error = abs(x(1:2,:) - sol_DRAM); %use matrix subtraction to get error
+DRAM_error_norm =vecnorm(vecnorm(DRAM_error));
 
-PSO_error = x(1:2,:) - sol_PSO; %use matrix subtraction to get error
-PSO_error_norm = vecnorm(PSO_error);
+PSO_error = abs(x(1:2,:) - sol_PSO); %use matrix subtraction to get error
+PSO_error_norm = vecnorm(vecnorm(PSO_error));
 
-UKF_error_norm = error_norm;
+UKF_error = abs(x(1:2,:) - xhat(1:2,:));
+UKF_error_norm= vecnorm(UKF_error);
 
 
 
-figure(20) %Plot norm of the error over time
-plot(time_vector, UKF_error_norm, 'Linewidth', 2); hold on;
-%plot(time_vector, mahafy_error_norm, 'Linewidth', 2); 
-plot(time_vector, DRAM_error_norm, 'Linewidth', 2); hold on; 
-plot(time_vector, PSO_error_norm, 'Linewidth', 2); hold on; 
 
-ylabel('Error Norm');
-xlabel('Time');
-%legend('UKF','Mahafy fit','DRAM','PSO');
-legend('UKF','DRAM','PSO');
+figure(20)
+bar([UKF_error(1,:)'  DRAM_error(1,:)' PSO_error(1,:)' ],'grouped')
+set(gca,'XTick',1:2:T,'Xticklabel',1900:2:1920,'fontsize', ftsz)
+ylabel('Prey Error Norm');
+xlabel('Years');
+legend('UKF', 'DRAM','PSO');
 
-title('Norm of Error Over Time');
-set(gca, 'fontsize', ftsz)
-% 
+set(gca,'Xtick', 1:T,'Xticklabel',time_vector, 'fontsize', ftsz)
+
+
+figure(21)
+bar([UKF_error(2,:)' DRAM_error(2,:)' PSO_error(2,:)' ],'grouped')
+set(gca,'XTick',1:2:T,'Xticklabel',1900:2:1920,'fontsize', ftsz)
+ylabel('Predator Error Norm');
+xlabel('Years');
+legend('UKF', 'DRAM','PSO');
+set(gca,'Xtick', 1:T,'Xticklabel',time_vector, 'fontsize', ftsz)
+
 
 
