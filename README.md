@@ -3,7 +3,7 @@
 An modified the REU2020 students work on the applications of Joint UKF, PSO, DRAM in fitting parameters in the Lotka Voterra model.
 We implement all parametrization techniques (Joint UKF, PSO, DRAM) on 2 datasets: [Mahaffy](https://jmahaffy.sdsu.edu/courses/f09/math636/lectures/lotka/qualde2.html) and [Hudson Bay](https://gist.github.com/michaelosthege/27315631c1aedbe55f5affbccabef1ca)
 
-Instruction: Run either ```combine_mahafy``` or ```combine_Hudson``` to generate all the figures in the manuscript. All the figures inlcude: the predicted prey and predator population by each method, error magntidue, time-variant parameters, parameter distributions, and correlation on both datasets.
+**Instruction**: Run either ```combine_mahafy``` or ```combine_Hudson``` to generate all the figures in the manuscript. All the figures inlcude: the predicted prey and predator population by each method, error magntidue, time-variant parameters, parameter distributions, and correlation on both datasets.
 
 Repository overview: 
 1. ```Chow Lorenz```: the folder contains the original code from [[Chow et al.]](#1). in application of UKF on Lorenz system. They combine MLE and UKF to obtain the time-invariant parameters.
