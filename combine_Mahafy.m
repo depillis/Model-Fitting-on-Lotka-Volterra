@@ -7,6 +7,7 @@ close all;
 clc; 
 
 dataset = 'Mahafy'; 
+% https://jmahaffy.sdsu.edu/courses/f09/math636/lectures/lotka/qualde2.html
 
 %very slow around 40-45 mins
 cd ./MCMC
@@ -74,7 +75,7 @@ sol_UKF = xhat(1:2,:);
 ftsz=20; 
 
 figure(1)
-    ylim([0,200])
+    ylim([0,80])
     plot(time_vector,x(1,:), '.','MarkerSize', 20); hold on; 
     plot(time_vector,sol_UKF(1,:), '.-','LineWidth',2,'Color',[1.00,0.00,1.00],...
     'MarkerSize', 20); hold on;
@@ -82,57 +83,76 @@ figure(1)
     plot(time_vector, sol_DRAM(1,:), '-.', 'Linewidth', 1, 'Color', [0.00,0.45,0.74]);
     plot(time_vector, sol_PSO(1,:), '-.', 'Linewidth', 1, 'Color', [0.00,0.45,0.74]);
     
-    set(gca, 'XTick', 1:5:T ,'Xticklabel', 1900: 5: 1920,'fontsize', ftsz)
+    set(gca,'fontsize', ftsz)
     ylabel('population');
     xlabel('year');
-    legend('Raw data', 'UKF','Mahafy fit','DRAM','PSO');
+    legend('Raw data', 'UKF','Mahaffy','DRAM','PSO');
     title('Prey');
     
 figure(2)
-    ylim([0,200])
-    plot(time_vector,x(2,:), '.','MarkerSize', 20); hold on; 
-    plot(time_vector,sol_UKF(1,:), '.-','LineWidth',2,'Color',[1.00,0.00,1.00],...
+    ylim([0,80])
+     plot(time_vector,x(2,:), '.','MarkerSize', 20); hold on; 
+    plot(time_vector,sol_UKF(2,:), '.-','LineWidth',2,'Color',[1.00,0.00,1.00],...
     'MarkerSize', 20); hold on;
     plot(time_vector, sol_mahafy(2,:), '-.', 'Linewidth', 1, 'Color', [0.00,0.45,0.74]);
     plot(time_vector, sol_DRAM(2,:), '-.', 'Linewidth', 1, 'Color', [0.00,0.45,0.74]);
     plot(time_vector, sol_PSO(2,:), '-.', 'Linewidth', 1, 'Color', [0.00,0.45,0.74]);
     
-    set(gca, 'XTick', 1:5:T ,'Xticklabel', 1900: 5: 1920,'fontsize', ftsz)
+    set(gca,'fontsize', ftsz)
     ylabel('population');
     xlabel('year');
-    legend('Raw data','UKF', 'Mahafy fit','DRAM','PSO');
+    legend('Raw data','UKF', 'Mahaffy','DRAM','PSO');
     title('Predator');
 
 
 %============PLOT THE ERROR
 
 
-mahafy_error = x(1:2,:) - sol_mahafy; %use matrix subtraction to get error
-mahafy_error_norm = vecnorm(mahafy_error); %take columnwise norm
+mahafy_error = abs(x(1:2,:) - sol_mahafy); %use matrix subtraction to get error
+mahafy_error_norm = vecnorm(vecnorm(mahafy_error)); %take columnwise norm
 
-DRAM_error = x(1:2,:) - sol_DRAM; %use matrix subtraction to get error
-DRAM_error_norm = vecnorm(DRAM_error);
+DRAM_error = abs(x(1:2,:) - sol_DRAM); %use matrix subtraction to get error
+DRAM_error_norm =vecnorm(vecnorm(DRAM_error));
 
-PSO_error = x(1:2,:) - sol_PSO; %use matrix subtraction to get error
-PSO_error_norm = vecnorm(PSO_error);
+PSO_error = abs(x(1:2,:) - sol_PSO); %use matrix subtraction to get error
+PSO_error_norm = vecnorm(vecnorm(PSO_error));
 
-UKF_error_norm = error_norm;
+UKF_error = abs(x(1:2,:) - xhat(1:2,:));
+UKF_error_norm= vecnorm(UKF_error);
 
 
+%% change to multiple bar plot putting them next to each other
+% plot for prey and predator norm separately 
+% calculate norm of error over time for all prey and predator
 
-figure(20) %Plot norm of the error over time
-plot(time_vector, UKF_error_norm, 'Linewidth', 2); hold on;
-plot(time_vector, mahafy_error_norm, 'Linewidth', 2); 
-plot(time_vector, DRAM_error_norm, 'Linewidth', 2); hold on; 
-plot(time_vector, PSO_error_norm, 'Linewidth', 2); hold on; 
 
-ylabel('Error Norm');
-xlabel('Time');
-legend('UKF','Mahafy fit','DRAM','PSO');
-%legend('UKF','DRAM','PSO');
+figure(20)
+bar([UKF_error(1,:)' mahafy_error(1,:)' DRAM_error(1,:)' PSO_error(1,:)' ],'grouped')
+set(gca,'XTick',1:2:T,'Xticklabel',1900:2:1920,'fontsize', ftsz)
+ylabel('Prey Error Norm');
+xlabel('Years');
+legend('UKF', 'Mahaffy','DRAM','PSO');
 
-title('Norm of Error Over Time');
-set(gca, 'fontsize', ftsz)
+figure(21)
+bar([UKF_error(2,:)' mahafy_error(2,:)' DRAM_error(2,:)' PSO_error(2,:)' ],'grouped')
+set(gca,'XTick',1:2:T,'Xticklabel',1900:2:1920,'fontsize', ftsz)
+ylabel('Predator Error Norm');
+xlabel('Years');
+legend('UKF', 'Mahaffy','DRAM','PSO');
+
+% figure(20) %Plot norm of the error over time
+% plot(time_vector, UKF_error_norm, 'Linewidth', 2); hold on;
+% plot(time_vector, mahafy_error_norm, 'Linewidth', 2); 
+% plot(time_vector, DRAM_error_norm, 'Linewidth', 2); hold on; 
+% plot(time_vector, PSO_error_norm, 'Linewidth', 2); hold on; 
+
+% ylabel('Error Norm');
+% xlabel('Time');
+% legend('UKF','Mahafy fit','DRAM','PSO');
+% %legend('UKF','DRAM','PSO');
+
+% title('Norm of Error Over Time');
+% set(gca, 'fontsize', ftsz)
 % 
 
 
