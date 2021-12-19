@@ -161,13 +161,22 @@ for i=1:NT
                                        %state vector
     
    %Make sure parameters are biologically consistent (greater than 0)
-    if (xh(5,i) < 0) && i > 0
-        xh(5,i) = xh(5,i-1);
-    end
-    if (xh(6,i) < 0) && i > 0
-        xh(6,i) = xh(6,i-1);
-    end
+   % July 15, 2021: why only 5 and 6. Need to check for all states to be
+   % non_negative
+    %     if (xh(5,i) < 0) && i > 0
+    %         xh(5,i) = xh(5,i-1);
+    %     end
+    %     if (xh(6,i) < 0) && i > 0
+    %         xh(6,i) = xh(6,i-1);
+    %     end
+
+   
     
+ whereXiszero=find(xh(:,i)<0); 
+ 
+ if isempty(whereXiszero) == 0 
+ xh(whereXiszero,i)=xh(whereXiszero,i-1);
+ end
     
     
     

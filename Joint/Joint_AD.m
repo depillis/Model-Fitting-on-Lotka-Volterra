@@ -37,8 +37,10 @@ Nsubj = 1; %Number of subjects to run the UKF on, in our case unused
 % Load dataset of interest
 % extract time data, prey and predator data (in units of thousands)
 
-HLData = load('HaresLynxData_AD.mat');  
-rawData = eval(['HLData.',dataset]);
+%HLData = load('HaresLynxData_AD.mat');  
+%rawData = eval(['HLData.',dataset]);
+rawData = xlsread([dataset,'.xlsx']);
+
 T = length(rawData);  %Number of time data points
 x(1:2,:) = rawData(:, 2:3)'; % predator and prey populations
 
