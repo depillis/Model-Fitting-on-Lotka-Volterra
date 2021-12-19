@@ -36,11 +36,15 @@ filename = 'dram_LV_nopriors';
 % SELECT DATA
 % observed predator-prey data: d = 0
 % simulated data:              d = 1
-HLData= load('HaresLynxData_AD.mat'); 
-data = eval(['HLData.',dataset]); 
+% HLData= load('HaresLynxData_AD.mat'); 
+% data = eval(['HLData.',dataset]); 
+data = xlsread([dataset,'.xlsx']);
+
+
+
 
 % Plot original data
-figure(1); clf
+figure(18); clf
 plot(data(:,1),data(:,2:end),'o-');
 title('Observed Populations Over Time');
 legend({'Hares', 'Lynx'},'Location','best');
@@ -92,7 +96,7 @@ options.method = 'dram';
 [results, chain, s2chain, ss2chain]= mcmcrun(model,data,params,options);
 
 % plot burn-in chain
-figure(1)
+figure(19)
 plot(chain(1:options.nsimu,:));
 set(gca, 'FontSize', 20)
 title('Burn-in Parameter Chain Values');
@@ -106,7 +110,7 @@ options.method = 'dram';
     mcmcrun(model,data,params,options,results);
 
 % plot chain
-figure(4)
+figure(47)
 plot(chain(1:options.nsimu,:));
 set(gca, 'FontSize', 20)
 title('Parameter Chain Values');
@@ -115,9 +119,10 @@ legend('alpha', 'beta', 'gamma', 'delta');
 % Chain plots should reveal that the chain has converged and we can
 % use the results for estimation and predictive inference.
 
-figure(2); clf
+figure(102); clf
 mcmcplot(chain,[],results,'pairs');
-figure(3); clf
+
+figure(30); clf
 mcmcplot(chain,[],results,'denspanel',2);
 
 %% Compute statistics for resultant parameters
@@ -176,6 +181,8 @@ subplot(2,1,1)
 title('Predicted Hare Population')
 subplot(2,1,2)
 title('Predicted Lynx Population')
+
+
 %% Evaluation of Parameterization using mean squared error
 meanparams = results.theta;
 csvwrite('DRAMpar.csv', meanparams); 
@@ -191,7 +198,7 @@ y0=data(1,2:3);
 
 
 
-
+figure(13)
 for i=1:2
   subplot(2,1,i)
   hold on
