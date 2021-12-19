@@ -1,4 +1,4 @@
-function Joint_AD(dataset)
+function Run_JointUKF(dataset)
 % July 10 2021 An modify this routine into a function
 % input: dataset e.g 'Mahafy' or 'Hudson_Bay'
 % output: none. 
