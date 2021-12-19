@@ -11,32 +11,30 @@ close all;
 clc; 
 
 dataset = 'Hudson_Bay'; 
+%% 
 
 %very slow around 40-45 mins
 cd ./MCMC
-DRAM_AD(dataset) 
+Run_DRAM(dataset) 
 
 %============ Load data =================% 
 cd .. 
 cd ./Joint % Change directory
-Joint_AD(dataset)
+Run_JointUKF(dataset)
 
 
 %change directory to PSO
 cd ..
 cd ./PSO
-PSO_AD(dataset)
-
+Run_PSO(dataset)
 
 
 %% call dataset here 
-cd .. 
-HLData = load('HaresLynxData_AD.mat');  
-rawData = eval(['HLData.', dataset]);
+cd ..
+rawData = xlsread([dataset,'.xlsx']);
 T = length(rawData);  %Number of time data points
 x(1:2,:) = rawData(:, 2:3)'; % predator and prey populations
 time_vector = rawData(:,1);
-
 
 
 %==========Parameters ================%

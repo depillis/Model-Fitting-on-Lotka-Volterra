@@ -2,11 +2,11 @@
 % Date: 6/16/2021
 % Compare estimated parameters across all the methods 
 
-clear all; 
+clear ; 
 close all; 
 clc; 
 
-dataset = 'Mahafy'; 
+dataset = 'Mahaffy'; 
 % https://jmahaffy.sdsu.edu/courses/f09/math636/lectures/lotka/qualde2.html
 
 %very slow around 40-45 mins
@@ -27,14 +27,11 @@ Run_PSO(dataset)
 
 
 %% call dataset here 
-cd .. 
-HLData = load('HaresLynxData_AD.mat');  
-rawData = eval(['HLData.', dataset]);
+cd ..
+rawData = xlsread([dataset,'.xlsx']);
 T = length(rawData);  %Number of time data points
 x(1:2,:) = rawData(:, 2:3)'; % predator and prey populations
 time_vector = rawData(:,1);
-
-
 
 %==========Parameters ================%
 mahafypar = [0.4807; 0.9272; 0.02482; 0.02756];% alpha, gamma, beta, delta 

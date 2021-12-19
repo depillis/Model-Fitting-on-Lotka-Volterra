@@ -1,4 +1,4 @@
-function PSO_AD(dataset)
+function Run_PSO(dataset)
 
 %% fitting Lotka-Volterra with PSO
 %  Author:       An Do
