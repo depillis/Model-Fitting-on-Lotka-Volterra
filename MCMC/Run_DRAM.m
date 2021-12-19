@@ -1,4 +1,4 @@
-function DRAM_AD(dataset)
+function Run_DRAM(dataset)
 %% Lotka-Volterra Model
 % Authors:      Edited by An Do
 %               Adapted by C. Catlett & M. Watanabe

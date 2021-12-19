@@ -11,18 +11,18 @@ dataset = 'Mahafy';
 
 %very slow around 40-45 mins
 cd ./MCMC
-DRAM_AD(dataset) 
+Run_DRAM(dataset) 
 
 %============ Load data =================% 
 cd .. 
 cd ./Joint % Change directory
-Joint_AD(dataset)
+Run_JointUKF(dataset)
 
 
 %change directory to PSO
 cd ..
 cd ./PSO
-PSO_AD(dataset)
+Run_PSO(dataset)
 
 
 
