@@ -19,13 +19,15 @@ tic
 rng default 
 
 % Load datasets
-HLData = load('./Data/HaresLynxData_AD.mat');    % Loads as 'Lotka_Volterra_Data'
-load('./Data/LVsimData.csv')        % True Params: [.7 .1 .7 .1 0 0]
-load('./Data/LVsimData_wnoise.csv') % True Params: [.7 .1 .7 .1 .05 .05]
+%HLData = load('./Data/HaresLynxData_AD.mat');  % Loads as 'Lotka_Volterra_Data'
+data = xlsread([dataset,'.xlsx']);
+load('./Data/LVsimData.csv');        % True Params: [.7 .1 .7 .1 0 0]
+load('./Data/LVsimData_wnoise.csv'); % True Params: [.7 .1 .7 .1 .05 .05]
 
 % Select dataset: specify data from above files, retype as string
-data = eval(['HLData.',dataset]);
-data_str = 'Lotka_Volterra_Data'; % Formatting for switch-statement
+%data = eval(['HLData.',dataset]);
+data_str = [dataset, 'data']; 
+%'Lotka_Volterra_Data'; % Formatting for switch-statement
 
 % Select objective function: ss -> sum of squares, ll -> normal log-likelihood
 objfunchoice = 'ss';
@@ -81,7 +83,7 @@ csvwrite('PSOpar.csv',out);
 % Generate ODE solved for best fit params
 bfdata = LVfun([0:length(data(:,1)) - 1], out, data(:,2:end));
 
-figure(1); clf
+figure(11); clf
 tiledlayout(2,1)
 xaxis = data(:,1)';
 
