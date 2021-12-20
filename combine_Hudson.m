@@ -31,7 +31,7 @@ Run_PSO(dataset)
 
 %% call dataset here 
 cd ..
-rawData = xlsread([dataset,'.xlsx']);
+rawData = xlsread(['./Data/',dataset,'.xlsx']);
 T = length(rawData);  %Number of time data points
 x(1:2,:) = rawData(:, 2:3)'; % predator and prey populations
 time_vector = rawData(:,1);
