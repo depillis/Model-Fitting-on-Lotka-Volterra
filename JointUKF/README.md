@@ -5,5 +5,6 @@ This folder is meant for using the Joint UKF to perform estimation of states and
 3. MeasurementFcn - set up of the measurement function for the UKF
 4. UKF - performs ALL iterations of the Joint UKF algorithm
 5. Joint_UKF_Real_Data_Figures - produces figures found in the paper (as well as some extras)
+6. Figures folder contains pre-generated figures reported in the manuscript.
 
 
