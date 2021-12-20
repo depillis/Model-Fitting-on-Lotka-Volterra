@@ -14,6 +14,7 @@ Repository overview:
 8. ```Run_MahaffyData```: the main function to run all methods and their analysis on Mahaffy dataset 
 9. ```Notes```: meeting presentations and results from what An learned from previous work. 
 10. ``Figures``: The folder contains all the figures (fig files and eps files) that appear in the manuscript. 
+11. ```Data```: Hudson Bay and Mahaffy dataset are stored here. 
 
 
 
