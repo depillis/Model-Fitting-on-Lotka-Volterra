@@ -42,4 +42,7 @@ functions from the mcmcstat library.
 		Function for a user-specified prior function. Default in this implementation is a
 		log-uniform prior.
 		
+	DRAM_pars: estimated parameters by DRAM 
+	DRAM_time: reported runtime 
+		
 
