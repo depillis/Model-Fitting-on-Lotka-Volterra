@@ -1,15 +1,13 @@
 ``Description``:        Script to estimate parameters of the Lotka-Volterra system.
                This script can be used to perform the Metropolis-Hastings 
-               and DRAM MCMC methods. Specify 'mh' or 'dram' in lines 87 
-               and 99.
-               Uses functions lotkaVolterrasys.m, lotkaVolterrafun.m, 
-               lotkaVolterrass.m, and mcmcstat library
-
+               and DRAM MCMC methods. 
+	     
  ``Direction``:   This script is meant to be run in full, ~15 min. User 
                specifications exist for DRAM vs Metropolis-Hastings and 
                naming the workspace. 
 
 Execute function: Run_DRAM(dataset) where dataset = 'Mahaffy' or 'HudsonBay'. The datasets are in Excel format and contain year, hares and lynx population. 
+
 E.g.: Run_DRAM('Mahaffy')
 
 ```Reference```
