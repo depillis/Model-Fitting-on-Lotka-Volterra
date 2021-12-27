@@ -1,11 +1,11 @@
-Descr:        Script to estimate parameters of the Lotka-Volterra system.
+``Description``:        Script to estimate parameters of the Lotka-Volterra system.
                This script can be used to perform the Metropolis-Hastings 
                and DRAM MCMC methods. Specify 'mh' or 'dram' in lines 87 
                and 99.
                Uses functions lotkaVolterrasys.m, lotkaVolterrafun.m, 
                lotkaVolterrass.m, and mcmcstat library
 
- Directions:   This script is meant to be run in full, ~15 min. User 
+ ``Direction``:   This script is meant to be run in full, ~15 min. User 
                specifications exist for DRAM vs Metropolis-Hastings and 
                naming the workspace. 
 
