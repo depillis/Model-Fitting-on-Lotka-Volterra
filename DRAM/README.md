@@ -6,7 +6,6 @@ Prior distributions are assumed to be uniform, and we use a Gaussian likelihood 
 Execute function: Run_DRAM(dataset) where dataset = 'Mahaffy' or 'HudsonBay'. The datasets are in Excel format and contain year, hares and lynx population. 
 
 ```Reference```
-The code here is adapted from M.J.Laine code found in the folder MJLaine_Algae_example.
-The mhsample function is implemented in Reuel_Smith_mhsample.m and based on code from: https://crr.umd.edu/bayesian-parameter-estimation-single-data-set-example-problem-52-matlab
+mcmcstat is a librabry codes from M.J.Laine https://crr.umd.edu/bayesian-parameter-estimation-single-data-set-example-problem-52-matlab
 
 
