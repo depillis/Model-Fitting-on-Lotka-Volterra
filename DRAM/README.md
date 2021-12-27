@@ -4,6 +4,7 @@ Prior distributions are assumed to be uniform, and we use a Gaussian likelihood 
 
 
 Execute function: Run_DRAM(dataset) where dataset = 'Mahaffy' or 'HudsonBay'. The datasets are in Excel format and contain year, hares and lynx population. 
+E.g.: Run_DRAM('Mahaffy')
 
 ```Reference```
 mcmcstat is a librabry codes from M.J.Laine https://crr.umd.edu/bayesian-parameter-estimation-single-data-set-example-problem-52-matlab
