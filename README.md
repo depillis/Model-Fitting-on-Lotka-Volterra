@@ -8,9 +8,9 @@ Repository overview:
 1. ```Joint```: The folder contains the modified REU student on prey-predator model. The main function is ```Run_JointUKF(dataset)``` to run UKF for any particular dataset. 
 2.  ```MCMC```: The folder contains the DRAM implementation. The main function to run is ``Run_DRAM(dataset)``, which runs DRAM for any particular dataset.
 3.  ```PSO```: The folder contains the PSO implementation. The main function to run is ``Run_PSO(dataset)`` to run DRAM for any particular dataset. 
-4.  ```Run_HudsonBayData```: the main function to run all methods and their analysis on Hudson_bay dataset 
-5.  ```Run_MahaffyData```: the main function to run all methods and their analysis on Mahaffy dataset 
-6.  ```Data```: Hudson Bay and Mahaffy dataset are stored here. 
+4.  ```Data```: All studied dataset are stored here. 
+5.  ```Run_HudsonBayData```: the main function to run all methods and their analysis on Hudson_bay dataset 
+6.  ```Run_MahaffyData```: the main function to run all methods and their analysis on Mahaffy dataset 
 
 
 
