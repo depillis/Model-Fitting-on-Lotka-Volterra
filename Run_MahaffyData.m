@@ -11,7 +11,7 @@ dataset = 'Mahaffy';
 % https://jmahaffy.sdsu.edu/courses/f09/math636/lectures/lotka/qualde2.html
 
 %very slow around 40-45 mins
-cd ./MCMC
+cd ./DRAM
 Run_DRAM(dataset) 
 
 %============ Load data =================% 
