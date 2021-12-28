@@ -2,8 +2,7 @@
 % Date: 6/16/2021
 % Compare estimated parameters across all the methods 
 
-% Add reference links for both datasets 
-% https://gist.github.com/michaelosthege/27315631c1aedbe55f5affbccabef1ca
+% Data for HudsonBay comes from https://gist.github.com/michaelosthege/27315631c1aedbe55f5affbccabef1ca
 
 
 clear ; 
