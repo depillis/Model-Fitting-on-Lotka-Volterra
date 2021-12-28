@@ -13,7 +13,7 @@ dataset = 'Hudson_Bay';
 %% 
 
 %very slow around 40-45 mins
-cd ./MCMC
+cd ./DRAM
 Run_DRAM(dataset) 
 
 %============ Load data =================% 
