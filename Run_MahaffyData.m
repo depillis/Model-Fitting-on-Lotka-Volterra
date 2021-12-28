@@ -1,6 +1,7 @@
 %AUTHOR: An Do 
 % Date: 6/16/2021
 % Compare estimated parameters across all the methods 
+% Data for Mahaffy comes from https://jmahaffy.sdsu.edu/courses/f09/math636/lectures/lotka/qualde2.html
 
 clear ; 
 close all; 
