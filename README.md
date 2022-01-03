@@ -14,6 +14,4 @@ Repository overview:
 
 
 
-## References
-<a id="1">[1]</a> 
-Chow, Sy-Miin, Emilio Ferrer, and John R. Nesselroade. "An unscented Kalman filter approach to the estimation of nonlinear dynamical systems models." Multivariate Behavioral Research 42.2 (2007): 283-321.
+References are included with the specific algorithms. 
