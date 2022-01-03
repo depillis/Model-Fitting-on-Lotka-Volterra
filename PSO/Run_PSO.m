@@ -21,8 +21,8 @@ rng default
 % Load datasets
 %HLData = load('./Data/HaresLynxData_AD.mat');  % Loads as 'Lotka_Volterra_Data'
 data = xlsread([dataset,'.xlsx']);
-load('./Data/LVsimData.csv');        % True Params: [.7 .1 .7 .1 0 0]
-load('./Data/LVsimData_wnoise.csv'); % True Params: [.7 .1 .7 .1 .05 .05]
+%load('./Data/LVsimData.csv');        % True Params: [.7 .1 .7 .1 0 0]
+%load('./Data/LVsimData_wnoise.csv'); % True Params: [.7 .1 .7 .1 .05 .05]
 
 % Select dataset: specify data from above files, retype as string
 %data = eval(['HLData.',dataset]);

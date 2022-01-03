@@ -16,7 +16,7 @@ Run_DRAM(dataset)
 
 %============ Load data =================% 
 cd .. 
-cd ./Joint % Change directory
+cd ./JointUKF % Change directory
 Run_JointUKF(dataset)
 
 
@@ -36,9 +36,9 @@ time_vector = rawData(:,1);
 
 %==========Parameters ================%
 mahafypar = [0.4807; 0.9272; 0.02482; 0.02756];% alpha, gamma, beta, delta 
-UKFpar = readmatrix('./Joint/UKFpar.csv');
+UKFpar = readmatrix('./JointUKF/UKFpar.csv');
 PSOpar = readmatrix('./PSO/PSOpar.csv');
-DRAMpar = readmatrix('./MCMC/DRAMpar.csv');
+DRAMpar = readmatrix('./DRAM/DRAMpar.csv');
 
 % 2nd and 3rd entries of PSOpar and DRAM needs to swap 
 PSOpar([2,3]) = PSOpar([3 2]); 
@@ -67,7 +67,7 @@ sol = ode45(@(t, y)Lotka_Volterra_Model(t, y,PSOpar), tspan, x0);
 sol_PSO= deval(sol,tspan);
 %sol_PSO_err = deval(sol, time_vector-1900);
 
-load('./Joint/UKF_data.mat'); 
+load('./JointUKF/UKF_data.mat'); 
 sol_UKF = xhat(1:2,:);
 
 ftsz=20; 
@@ -124,33 +124,41 @@ UKF_error_norm= vecnorm(UKF_error);
 % calculate norm of error over time for all prey and predator
 
 
-figure(20)
-bar([UKF_error(1,:)' mahafy_error(1,:)' DRAM_error(1,:)' PSO_error(1,:)' ],'grouped')
-set(gca,'XTick',1:2:T,'Xticklabel',1900:2:1920,'fontsize', ftsz)
-ylabel('Prey Error Norm');
-xlabel('Years');
-legend('UKF', 'Mahaffy','DRAM','PSO');
-
-figure(21)
-bar([UKF_error(2,:)' mahafy_error(2,:)' DRAM_error(2,:)' PSO_error(2,:)' ],'grouped')
-set(gca,'XTick',1:2:T,'Xticklabel',1900:2:1920,'fontsize', ftsz)
-ylabel('Predator Error Norm');
-xlabel('Years');
-legend('UKF', 'Mahaffy','DRAM','PSO');
-
-% figure(20) %Plot norm of the error over time
-% plot(time_vector, UKF_error_norm, 'Linewidth', 2); hold on;
-% plot(time_vector, mahafy_error_norm, 'Linewidth', 2); 
-% plot(time_vector, DRAM_error_norm, 'Linewidth', 2); hold on; 
-% plot(time_vector, PSO_error_norm, 'Linewidth', 2); hold on; 
-
-% ylabel('Error Norm');
-% xlabel('Time');
-% legend('UKF','Mahafy fit','DRAM','PSO');
-% %legend('UKF','DRAM','PSO');
-
-% title('Norm of Error Over Time');
-% set(gca, 'fontsize', ftsz)
+% figure(20)
+% bar([UKF_error(1,:)' mahafy_error(1,:)' DRAM_error(1,:)' PSO_error(1,:)' ],'grouped')
+% set(gca,'XTick',1:2:T,'Xticklabel',1900:2:1920,'fontsize', ftsz)
+% ylabel('Prey Error Norm');
+% xlabel('Years');
+% legend('UKF', 'Mahaffy','DRAM','PSO');
 % 
+% figure(21)
+% bar([UKF_error(2,:)' mahafy_error(2,:)' DRAM_error(2,:)' PSO_error(2,:)' ],'grouped')
+% set(gca,'XTick',1:2:T,'Xticklabel',1900:2:1920,'fontsize', ftsz)
+% ylabel('Predator Error Norm');
+% xlabel('Years');
+% legend('UKF', 'Mahaffy','DRAM','PSO');
+
+figure(20) %Plot norm of the error over time
+plot(time_vector, UKF_error(1,:)', 'Linewidth', 2); hold on;
+plot(time_vector, mahafy_error(1,:)', 'Linewidth', 2); 
+plot(time_vector, DRAM_error(1,:)', 'Linewidth', 2); hold on; 
+plot(time_vector, PSO_error(1,:)', 'Linewidth', 2); hold on; 
+
+ylabel('Prey point-wise error ');
+xlabel('Years');
+legend('UKF','Mahafy fit','DRAM','PSO');
+set(gca, 'fontsize', ftsz)
+
+figure(21) %Plot norm of the error over time
+plot(time_vector, UKF_error(2,:)', 'Linewidth', 2); hold on;
+plot(time_vector, mahafy_error(2,:)', 'Linewidth', 2); 
+plot(time_vector, DRAM_error(2,:)', 'Linewidth', 2); hold on; 
+plot(time_vector, PSO_error(2,:)', 'Linewidth', 2); hold on; 
+
+ylabel('Predator point-wise error ');
+xlabel('Years');
+legend('UKF','Mahafy fit','DRAM','PSO');
+set(gca, 'fontsize', ftsz)
+
 
 

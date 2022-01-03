@@ -41,8 +41,6 @@ filename = 'dram_LV_nopriors';
 data = xlsread([dataset,'.xlsx']);
 
 
-
-
 % Plot original data
 figure(18); clf
 plot(data(:,1),data(:,2:end),'o-');
