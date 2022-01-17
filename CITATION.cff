@@ -1,7 +1,22 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
 authors:
-  - family-names: Catlett, dePillis, Do, Edholm, Shenker, Shtylla, Wander, Watanabe
-    given-names: Christina, Lisette, An, Christina, Daniel, Blerta, Rachel, Maya
+  - family-names: Catlett
+    given-names: Christina
+  - family-names: dePillis
+    given-names: Lisette
+  - family-names: Do
+    given-names: An
+  - family-names: Edholm
+    given-names: Christina J.
+  - family-names: Shenker
+    given-names: Daniel
+  - family-names: Shtylla
+    given-names: Blerta
+  - family-names: Wander
+    given-names: Rachel
+  - family-names: Watanabe
+    given-names: Maya
 title: "A mathematical modeling exploration of data assimilation for simple model fitting"
 date-released: 2021-12-27
+url: "https://github.com/depillis/Model-Fitting-on-Lotka-Volterra"
